@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "817505846253",
+    "firebase_url": "https://kapitaltaskmanager-default-rtdb.firebaseio.com",
+    "project_id": "kapitaltaskmanager",
+    "storage_bucket": "kapitaltaskmanager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817505846253:android:1552efa1e431b47e0d1de4",
+        "android_client_info": {
+          "package_name": "com.afsoftwaresolutions.kapitalapp.kapital_ing_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817505846253-crk7mn4dqhiromuqcua2jglrbhlup1j4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzwfMK6aQTxjO7Apd_IlVz2f4Pw0pouP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817505846253-crk7mn4dqhiromuqcua2jglrbhlup1j4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817505846253:android:c90f919214b5b2af0d1de4",
+        "android_client_info": {
+          "package_name": "com.afsoftwaresolutions.kapitaltaskmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817505846253-4d2ffg9rcp3s96d8cs8qe03pguv3qigs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.afsoftwaresolutions.kapitaltaskmanager",
+            "certificate_hash": "a7ee2cb6f9418c66149cc2c2ef8cbc6ba522c946"
+          }
+        },
+        {
+          "client_id": "817505846253-crk7mn4dqhiromuqcua2jglrbhlup1j4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzwfMK6aQTxjO7Apd_IlVz2f4Pw0pouP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817505846253-crk7mn4dqhiromuqcua2jglrbhlup1j4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
