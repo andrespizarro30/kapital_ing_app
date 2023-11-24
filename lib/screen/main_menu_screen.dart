@@ -102,6 +102,19 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   },
                 ),
                 ListTile(
+                  leading: Icon(Icons.remove_red_eye_outlined ),
+                  title: Text("Control y Seguimiento Diario",style: TextStyle(fontSize: 15.0)),
+                  onTap: (){
+                    if(modulePermissionsG!.contains("CtrlSeg") || modulePermissionsG!.contains("All")){
+                      Navigator.pushNamed(context, 'follow_up');
+                      displayToastMessages("Control y Seguimiento Diario de Actividades", context);
+                    }else{
+                      displayToastMessages("No tiene permisos para este módulo", context);
+                    }
+
+                  },
+                ),
+                ListTile(
                   leading: Icon(Icons.follow_the_signs),
                   title: Text("Salir",style: TextStyle(fontSize: 15.0)),
                   onTap: (){

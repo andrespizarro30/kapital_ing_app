@@ -1902,7 +1902,7 @@ class _WorkVitacoraScreenState extends State<WorkVitacoraScreen> {
                                   .child(currentProjectId)
                                   .child(selectedDate)
                                   .child("VoBoKapital")
-                                  .set(select!);
+                                  .set(select);
 
                             });
                           }else{
@@ -1925,7 +1925,7 @@ class _WorkVitacoraScreenState extends State<WorkVitacoraScreen> {
                                     .child(currentProjectId)
                                     .child(selectedDate)
                                     .child("VoBoInterv")
-                                    .set(select!);
+                                    .set(select);
 
                               });
                             }else{
@@ -2103,7 +2103,7 @@ class _WorkVitacoraScreenState extends State<WorkVitacoraScreen> {
                                     .child(currentProjectId)
                                     .child(selectedDate)
                                     .child("ClosedKapital")
-                                    .set(select!);
+                                    .set(select);
                               });
 
                               displayToastMessages("Bitacora cerrada por parte de Kapital", context);
@@ -2137,7 +2137,7 @@ class _WorkVitacoraScreenState extends State<WorkVitacoraScreen> {
                                     .child(currentProjectId)
                                     .child(selectedDate)
                                     .child("ClosedInterv")
-                                    .set(select!);
+                                    .set(select);
                               });
 
                               displayToastMessages("Bitacora cerrada por parte de Interventoría", context);
@@ -2300,7 +2300,7 @@ class _WorkVitacoraScreenState extends State<WorkVitacoraScreen> {
           bool select = (eventSnap.snapshot.value as Map)["VoBoInterv"];
           setState(() {
             setState(() {
-              VBInterv = select!;
+              VBInterv = select;
             });
           });
         }
@@ -2564,7 +2564,7 @@ class _WorkVitacoraScreenState extends State<WorkVitacoraScreen> {
           bool select = (eventSnap.snapshot.value as Map)["VoBoKapital"];
           setState(() {
             setState(() {
-              VBKapital = select!;
+              VBKapital = select;
             });
           });
         }
@@ -2713,7 +2713,7 @@ class _WorkVitacoraScreenState extends State<WorkVitacoraScreen> {
         bool select = (eventSnap.snapshot.value as Map)["VoBoInterv"];
         setState(() {
           setState(() {
-            VBInterv = select!;
+            VBInterv = select;
           });
         });
       }
@@ -2956,7 +2956,7 @@ class _WorkVitacoraScreenState extends State<WorkVitacoraScreen> {
         bool select = (eventSnap.snapshot.value as Map)["VoBoKapital"];
         setState(() {
           setState(() {
-            VBKapital = select!;
+            VBKapital = select;
           });
         });
       }

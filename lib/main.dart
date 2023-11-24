@@ -35,8 +35,10 @@ void main() async{
 DatabaseReference currentProjectsRef = FirebaseDatabase.instance.ref().child("CURRENT_PROJECTS");
 DatabaseReference vitacorasRef = FirebaseDatabase.instance.ref().child("Vitacora_Obra");
 DatabaseReference usersRef = FirebaseDatabase.instance.ref().child("users");
-
 Reference vitacoraPhotosRef = FirebaseStorage.instance.ref().child("Vitacora_Obra");
+
+DatabaseReference dailyWorkRef = FirebaseDatabase.instance.ref().child("DailyWork");
+Reference dailyWorkPhotosRef = FirebaseStorage.instance.ref().child("DailyWork");
 
 class MyApp extends StatefulWidget {
 

@@ -5,13 +5,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../models/current_user_data.dart';
 
 String? currentProjectG = "";
 String? userType = "";
 String currentProjectId = "";
 List<String>? modulePermissionsG;
 String? fullNameG = "";
+String? userCode = "";
 
 StreamSubscription<DatabaseEvent>? vitacorasInfoStreamSubscription;
 

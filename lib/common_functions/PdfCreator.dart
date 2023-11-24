@@ -31,7 +31,7 @@ class CreatePDFDocument{
     format.alignment = PdfTextAlignment.center;
 
     page.graphics.drawString("ACTAS DE VECINDAD", titleFont,bounds: Rect.fromLTWH(250, 10, 0, 0),format: format);
-    page.graphics.drawString(neighborhoodActModel!.project!, titleFont2,bounds: Rect.fromLTWH(250, 40, 0, 0),format: format);
+    page.graphics.drawString(neighborhoodActModel.project!, titleFont2,bounds: Rect.fromLTWH(250, 40, 0, 0),format: format);
 
     PdfStandardFont subFont = PdfStandardFont(PdfFontFamily.helvetica,15,style: PdfFontStyle.bold);
     PdfStandardFont subFont2 = PdfStandardFont(PdfFontFamily.helvetica,15,style: PdfFontStyle.underline);

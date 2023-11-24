@@ -2,20 +2,21 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:kapital_ing_app/common_functions/common_functions.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:signature/signature.dart';
 
+import '../common_functions/common_functions.dart';
 import '../data_handler/app_data.dart';
 import '../main.dart';
 
-class SignatureVitacoraScreen extends StatelessWidget {
+
+class SignatureDailyWorkScreen extends StatelessWidget {
 
   String? selectedDate;
 
-  SignatureVitacoraScreen({this.selectedDate});
-  
+  SignatureDailyWorkScreen({this.selectedDate});
+
 
   final SignatureController signatureController = SignatureController(
       penColor: Colors.red,
@@ -66,9 +67,9 @@ class SignatureVitacoraScreen extends StatelessWidget {
 
                     String appImagesPath = appDirectory!.path;
 
-                    String signName = "Firma_${userType}_${selectedDate}.jpg";
+                    String signName = "Firma_${userType}_${userCode!}_${selectedDate}.jpg";
 
-                    Directory folderDir = Directory("${appImagesPath}/Vitacoras/signatures/${selectedDate}");
+                    Directory folderDir = Directory("${appImagesPath}/DailyWork/signatures/${selectedDate}/${userCode!}");
 
                     if(await folderDir.exists() == false){
                       await folderDir.create(recursive: true);
@@ -80,9 +81,6 @@ class SignatureVitacoraScreen extends StatelessWidget {
 
                     if(userType=="Kapital"){
                       Provider.of<AppData>(context, listen: false).saveKapitalSignature(pngBytes!);
-                    }else
-                    if(userType=="Interv"){
-                      Provider.of<AppData>(context, listen: false).saveIntervSignature(pngBytes!);
                     }
 
                     Navigator.pop(context,"${folderDir.path}/${signName}");
@@ -101,7 +99,7 @@ class SignatureVitacoraScreen extends StatelessWidget {
 
   Future<bool> uploadSignToServer(String newFilename, File newImageFile,context) async{
 
-    final Reference refStorage = vitacoraPhotosRef.child("Firmas").child(selectedDate!).child(newFilename);
+    final Reference refStorage = dailyWorkPhotosRef.child("Firmas").child(selectedDate!).child(userCode!).child(newFilename);
 
     final UploadTask uploadTask = refStorage.putFile(newImageFile);
 
@@ -110,9 +108,10 @@ class SignatureVitacoraScreen extends StatelessWidget {
     if(taskSnapshot.state == TaskState.success){
       final String url = await taskSnapshot.ref.getDownloadURL();
 
-      vitacorasRef
+      dailyWorkRef
           .child(currentProjectId)
           .child(selectedDate!)
+          .child(userCode!)
           .child("Sign_${userType}")
           .set(url);
 
@@ -124,4 +123,6 @@ class SignatureVitacoraScreen extends StatelessWidget {
     }
 
   }
+
 }
+

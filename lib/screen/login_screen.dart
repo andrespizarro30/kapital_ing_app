@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         items: currentProjects.map<DropdownMenuItem<String>>((project) {
                           return DropdownMenuItem<String>(
                             value: project!.projectName!,
-                            child: Text(project!.projectName!),
+                            child: Text(project.projectName!),
                           );
                         }).toList(),
                         onChanged: (String? value) {
@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             int index = currentProjects.indexWhere((project) => project.projectName == value);
 
-                            currentProjectId = currentProjects![index].projectId!;
+                            currentProjectId = currentProjects[index].projectId!;
 
                           });
                         },
@@ -204,6 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     fullNameG = currentUserInfo!.FullName!;
                     userType = currentUserInfo!.userType!;
+                    userCode = currentUserInfo!.userName;
                     modulePermissionsG = currentUserInfo!.modulePermissions!.split(",");
                     Navigator.pushNamedAndRemoveUntil(context, "main_menu", (route) => false);
 
