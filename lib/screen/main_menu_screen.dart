@@ -115,6 +115,18 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   },
                 ),
                 ListTile(
+                  leading: Icon(Icons.document_scanner),
+                  title: Text("Acta Recibo",style: TextStyle(fontSize: 15.0)),
+                  onTap: (){
+                    if(modulePermissionsG!.contains("All")){
+                      Navigator.pushNamed(context, 'receive_act');
+                      displayToastMessages("Actas de Recibo", context);
+                    }else{
+                      displayToastMessages("No tiene permisos para este módulo", context);
+                    }
+                  },
+                ),
+                ListTile(
                   leading: Icon(Icons.follow_the_signs),
                   title: Text("Salir",style: TextStyle(fontSize: 15.0)),
                   onTap: (){

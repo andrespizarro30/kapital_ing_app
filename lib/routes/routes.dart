@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kapital_ing_app/screen/login_screen.dart';
 import 'package:kapital_ing_app/screen/main_menu_screen.dart';
 import 'package:kapital_ing_app/screen/neighborhood_act_screen.dart';
+import 'package:kapital_ing_app/screen/receiving_act_acreen.dart';
 import 'package:kapital_ing_app/screen/siganture_screen.dart';
 import 'package:kapital_ing_app/screen/splash_screen.dart';
 import 'package:kapital_ing_app/screen/work_vitacora_screen.dart';
@@ -16,6 +17,7 @@ Map<String, WidgetBuilder> getRoutes(){
     'neightbor_act': (BuildContext context) => NeighborhoodAct(),
     'signature': (BuildContext context) => SignatureScreen(),
     'work_vitacora': (BuildContext context) => WorkVitacoraScreen(),
+    'receive_act': (BuildContext context) => ReceivingAct(),
     'follow_up': (BuildContext context) => FollowUpScreen()
   };
 }
