@@ -30,7 +30,7 @@ class CreatePDFActReceive{
     PdfStringFormat format = PdfStringFormat();
     format.alignment = PdfTextAlignment.center;
 
-    page.graphics.drawString("ACTA RECIBO FACHADA FRONTAL BLOQUE No. 2", titleFont,bounds: Rect.fromLTWH(250, 10, 0, 0),format: format);
+    page.graphics.drawString("ACTA RECIBO FACHADA FRONTAL", titleFont,bounds: Rect.fromLTWH(250, 10, 0, 0),format: format);
     page.graphics.drawString(neighborhoodActModel.project!, titleFont2,bounds: Rect.fromLTWH(250, 40, 0, 0),format: format);
 
     PdfStandardFont subFont = PdfStandardFont(PdfFontFamily.helvetica,15,style: PdfFontStyle.bold);
