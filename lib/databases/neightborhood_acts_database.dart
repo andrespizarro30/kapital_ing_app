@@ -7,6 +7,8 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../models/house_number_list_model.dart';
+
 
 class NeighborhoodActDatabase{
 
@@ -66,6 +68,42 @@ class NeighborhoodActDatabase{
     final Database db = database;
 
     await db.insert('neighborhood_acts', neighborhoodAct.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
+
+  }
+
+  Future<List<HouseNumberList>> getHouseNumbersList(Database database) async{
+
+    final List<Map<String,dynamic>> maps = await database.query("neighborhood_acts",columns: ["ID","type_pro","no_prop"]);
+
+    List<HouseNumberList> houseNumberList = [];
+
+    var hnl = HouseNumberList(
+        id: "",
+        type_pro: "",
+        houseNumber: ""
+    );
+
+    houseNumberList.add(hnl);
+
+
+    maps.forEach((element) {
+      var hnl = HouseNumberList(
+          id: element["ID"].toString(),
+          type_pro: element["type_pro"],
+          houseNumber: element["no_prop"].toString()
+      );
+      houseNumberList.add(hnl);
+    });
+
+    return houseNumberList;
+
+  }
+
+  Future<List<Map<String,dynamic>>> getHouseNumberData(Database database,String houseNumber) async{
+
+    final List<Map<String,dynamic>> maps = await database.query("neighborhood_acts",where: "no_prop='"+ houseNumber +"'");
+
+    return maps;
 
   }
 

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kapital_ing_app/common_functions/PdfCreator.dart';
 import 'package:kapital_ing_app/common_functions/common_functions.dart';
+import 'package:kapital_ing_app/models/house_number_list_model.dart';
 import 'package:kapital_ing_app/screen/siganture_screen.dart';
 
 import 'package:path/path.dart' as path;
@@ -18,6 +19,7 @@ import '../common_functions/progressDialog.dart';
 import '../data_handler/app_data.dart';
 import '../databases/neightborhood_acts_database.dart';
 import '../models/neighborhood_act_model.dart';
+import '../widgets/request_camera_gallery.dart';
 
 class ReceivingAct extends StatefulWidget {
   const ReceivingAct({super.key});
@@ -53,7 +55,7 @@ class _ReceivingActState extends State<ReceivingAct> {
 
   NeighborhoodActModel? neighborhoodActModel = null;
 
-  String? dropdownValue = 'Parqueadero';
+  String? dropdownValue = 'Casa';
   List<String> spinnerItems = ['Parqueadero','Casa', 'Local Comercial', 'Duplex'];
 
   File? takenImage1 = null;
@@ -65,6 +67,10 @@ class _ReceivingActState extends State<ReceivingAct> {
 
   Uint8List? imageBytes;
 
+  String? propNumberSelected = "";
+
+  List<HouseNumberList> houseNumberList = [];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -74,6 +80,9 @@ class _ReceivingActState extends State<ReceivingAct> {
     neighborhoodActModel!.project = projectTEC.text;
     neighborhoodActModel!.type_pro = dropdownValue;
     neighborhoodActModel!.pao_sign = "firma_pao_bedoya.png";
+
+    getHousesList();
+
   }
 
   int touchedTimes = 0;
@@ -145,6 +154,54 @@ class _ReceivingActState extends State<ReceivingAct> {
                       );
                     });
               },
+            ),
+            IconButton(
+              icon: const Icon(Icons.search),
+              tooltip: 'Buscar Acta',
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (builder){
+                      return AlertDialog(
+                        title: const Text("Seleccionar propiedad Propiedad"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("No."),
+                            SizedBox(height: 1.0,),
+                            DropdownButton<String>(
+                                value: propNumberSelected,
+                                icon: Icon(Icons.arrow_drop_down),
+                                items: houseNumberList.map<DropdownMenuItem<String>>((housesList) {
+                                  return DropdownMenuItem<String>(
+                                    value: housesList!.houseNumber!,
+                                    child: Text(housesList!.houseNumber!),
+                                  );
+                                }).toList(),
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    propNumberSelected = value;
+                                    cleanForm();
+                                    Navigator.pop(context);
+                                    retrieveInformation(propNumberSelected!);
+                                  });
+                                },
+                                isExpanded: true,
+                            ),
+                            SizedBox(height: 1.0,),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                              onPressed: (){
+                                Navigator.pop(context);
+                              },
+                              child: const Text("SALIR")
+                          )
+                        ],
+                      );
+                    });
+              },
             )
           ],
         ),
@@ -172,6 +229,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.project = projectTEC.text;
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -194,6 +252,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                         dropdownValue = value;
                       });
                       neighborhoodActModel!.type_pro = dropdownValue;
+                      partialSaving();
                     },
                     isExpanded: true,
                   )
@@ -219,6 +278,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     onChanged: (String? value){
                       neighborhoodActModel!.ID = int.parse(noPropTEC.text);
                       neighborhoodActModel!.no_prop = int.parse(noPropTEC.text);
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -241,6 +301,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.area = int.parse(areaTEC.text);
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -263,6 +324,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.owner_name = ownerNameTEC.text;
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -285,6 +347,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.owner_id = ownerIdTEC.text;
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -307,6 +370,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.owner_phone = ownerPhoneTEC.text;
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -330,6 +394,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.state_property_description = statePropDescTEC.text;
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -431,6 +496,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.photo_1_description = photo1DescTEC.text;
+                      partialSaving();
                     }
                 ),
 
@@ -456,6 +522,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.photo_2_description = photo2DescTEC.text;
+                      partialSaving();
                     }
                 ),
 
@@ -557,6 +624,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.photo_3_description = photo3DescTEC.text;
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -581,6 +649,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.photo_4_description = photo4DescTEC.text;
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -681,6 +750,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.photo_5_description = photo5DescTEC.text;
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -705,6 +775,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.photo_6_description = photo6DescTEC.text;
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -729,6 +800,7 @@ class _ReceivingActState extends State<ReceivingAct> {
                     style: TextStyle(fontSize: 14.0,fontFamily: "Brand-Regular",color: Colors.black),
                     onChanged: (String? value){
                       neighborhoodActModel!.person_observations = personObservTEC.text;
+                      partialSaving();
                     }
                 ),
                 SizedBox(height: 1.0,),
@@ -787,7 +859,6 @@ class _ReceivingActState extends State<ReceivingAct> {
                           NeighborhoodActDatabase nadb = NeighborhoodActDatabase();
 
                           Database database = await nadb.CreateTable();
-
                           nadb.saveNewAct(neighborhoodActModel!, database);
 
                           CreatePDFActReceive pdfDoc = CreatePDFActReceive(neighborhoodActModel: neighborhoodActModel!);
@@ -830,7 +901,20 @@ class _ReceivingActState extends State<ReceivingAct> {
 
   Future pickImageFromCamera(int imageNumber) async{
 
-    final returnedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+    var response = await showDialog(
+        context: context,
+        builder: (BuildContext c) => RequestCameraOrGallery(
+
+        ));
+
+    XFile? returnedImage;
+
+    if(response == "Camara"){
+      returnedImage = await ImagePicker().pickImage(source: ImageSource.camera,imageQuality: 30);
+    }else
+    if(response == "Galeria"){
+      returnedImage = await ImagePicker().pickImage(source: ImageSource.gallery,imageQuality: 30);
+    }
 
     if(returnedImage == null) return;
 
@@ -876,6 +960,127 @@ class _ReceivingActState extends State<ReceivingAct> {
       }
     });
 
+  }
+
+  void retrieveInformation(String propNumber) async {
+
+    NeighborhoodActDatabase nadb = NeighborhoodActDatabase();
+    Database database = await nadb.CreateTable();
+
+    List<Map<String,dynamic>> maps = await nadb.getHouseNumberData(database, propNumber);
+
+    setState(() {
+
+      maps.forEach((element) {
+
+        projectTEC.text = element["project"].toString();
+        neighborhoodActModel!.project = element["project"].toString();
+
+        noPropTEC.text = element["no_prop"].toString();
+        neighborhoodActModel!.ID = element["no_prop"];
+        neighborhoodActModel!.no_prop = element["no_prop"];
+
+        areaTEC.text = element["area"].toString();
+        neighborhoodActModel!.area = element["area"];
+
+        ownerNameTEC.text = element["owner_name"].toString();
+        neighborhoodActModel!.owner_name = element["owner_name"];
+
+        ownerIdTEC.text = element["owner_id"].toString();
+        neighborhoodActModel!.owner_id = element["owner_id"];
+
+        ownerPhoneTEC.text = element["owner_phone"].toString();
+        neighborhoodActModel!.owner_phone = element["owner_phone"];
+
+        statePropDescTEC.text = element["state_property_description"].toString();
+        neighborhoodActModel!.state_property_description = element["state_property_description"];
+
+        photo1TEC.text = element["photo_1"].toString();
+        neighborhoodActModel!.photo_1 = element["photo_1"];
+        if(element["photo_1"] != null && element["photo_1"] != ""){
+          takenImage1 = File(element["photo_1"].toString());
+        }
+        photo1DescTEC.text = element["photo_1_description"].toString();
+        neighborhoodActModel!.photo_1_description = element["photo_1_description"];
+
+        photo2TEC.text = element["photo_2"].toString();
+        neighborhoodActModel!.photo_2 = element["photo_2"];
+        if(element["photo_2"] != null && element["photo_2"] != ""){
+          takenImage2 = File(element["photo_2"].toString());
+        }
+        photo2DescTEC.text = element["photo_2_description"].toString();
+        neighborhoodActModel!.photo_2_description = element["photo_2_description"];
+
+        photo3TEC.text = element["photo_3"].toString();
+        neighborhoodActModel!.photo_3 = element["photo_3"];
+        if(element["photo_3"] != null && element["photo_3"] != ""){
+          takenImage3 = File(element["photo_3"].toString());
+        }
+        photo3DescTEC.text = element["photo_3_description"].toString();
+        neighborhoodActModel!.photo_3_description = element["photo_3_description"];
+
+        photo4TEC.text = element["photo_4"].toString();
+        neighborhoodActModel!.photo_4 = element["photo_4"];
+        if(element["photo_4"] != null && element["photo_4"] != ""){
+          takenImage4 = File(element["photo_4"].toString());
+        }
+        photo4DescTEC.text = element["photo_4_description"].toString();
+        neighborhoodActModel!.photo_4_description = element["photo_4_description"];
+
+        photo5TEC.text = element["photo_5"].toString();
+        neighborhoodActModel!.photo_5 = element["photo_5"];
+        if(element["photo_5"] != null && element["photo_5"] != ""){
+          takenImage5 = File(element["photo_5"].toString());
+        }
+        photo5DescTEC.text = element["photo_5_description"].toString();
+        neighborhoodActModel!.photo_5_description = element["photo_5_description"];
+
+        photo6TEC.text = element["photo_6"].toString();
+        neighborhoodActModel!.photo_6 = element["photo_6"];
+        if(element["photo_6"] != null && element["photo_6"] != ""){
+          takenImage6 = File(element["photo_6"].toString());
+        }
+        photo6DescTEC.text = element["photo_6_description"].toString();
+        neighborhoodActModel!.photo_6_description = element["photo_6_description"];
+
+        personObservTEC.text = element["person_observations"].toString();
+        neighborhoodActModel!.person_observations = element["person_observations"];
+
+        ownerSignTEC.text = element["owner_sign"].toString();
+        neighborhoodActModel!.owner_sign = element["owner_sign"];
+
+        if(element["owner_sign"] != null && element["owner_sign"] != ""){
+          File fileSign = File(element["owner_sign"].toString());
+          Uint8List imageBytes = fileSign.readAsBytesSync();
+          Provider.of<AppData>(context, listen: false).saveSignature(imageBytes!);
+        }
+
+        paoSignTEC.text = element["pao_sign"].toString();
+        neighborhoodActModel!.pao_sign = element["pao_sign"];
+
+      });
+
+    });
+
+  }
+
+  void getHousesList() async {
+
+    NeighborhoodActDatabase nadb = NeighborhoodActDatabase();
+    Database database = await nadb.CreateTable();
+
+    List<HouseNumberList> houseNumberList = await nadb.getHouseNumbersList(database);
+
+    setState(() {
+      this.houseNumberList = houseNumberList;
+    });
+
+  }
+
+  void partialSaving() async{
+    NeighborhoodActDatabase nadb = NeighborhoodActDatabase();
+    Database database = await nadb.CreateTable();
+    nadb.saveNewAct(neighborhoodActModel!, database);
   }
 
   void cleanForm() {
